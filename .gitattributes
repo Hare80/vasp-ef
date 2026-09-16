@@ -1,0 +1,14 @@
+# Normalize line endings: this project must build identically on
+# Linux, macOS and Windows (MSYS2).  Everything textual is LF in-repo
+# and checked out LF; Fortran, shell and Python do not care, and
+# patches/*.patch absolutely require byte-stable LF context lines.
+* text=auto eol=lf
+*.F text eol=lf
+*.f90 text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.patch text eol=lf
+*.md text eol=lf
+*.incar text eol=lf
+*.json text eol=lf
+*.yml text eol=lf

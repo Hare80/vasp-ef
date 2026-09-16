@@ -1,0 +1,25 @@
+# build / test artifacts
+*.o
+*.mod
+*.exe
+a.out
+tests/build/
+__pycache__/
+*.pyc
+
+# local development playground (never commit VASP source!)
+dev/
+build/
+
+# VASP job outputs
+OUTCAR
+CONTCAR
+DOSCAR
+EIGENVAL
+IBZKPT
+OSZICAR
+PCDAT
+WAVECAR
+XDATCAR
+vasprun.xml
+vaspout.h5

@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  fortran-core:
+    name: Fortran math core (ubuntu, gfortran)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran libopenblas-dev
+      - name: Run ef_core unit tests
+        run: |
+          bash tests/run_tests.sh
+
+  python-scripts:
+    name: Workflow scripts (ubuntu, python3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install numpy (optional fast path of hessfreq.py)
+        run: pip install numpy
+      - name: Run script tests
+        run: python tests/test_scripts.py
+      - name: Run script tests without numpy (Jacobi fallback)
+        run: |
+          pip uninstall -y numpy
+          python tests/test_scripts.py
+
+  install-script:
+    name: install.sh idempotency (fixture tree)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build a minimal fake VASP tree
+        run: |
+          mkdir -p fake/src
+          # exact context lines of patches/chain_F_hook.stock.patch
+          cat > fake/src/chain.F <<'EOF'
+        MODULE chain
+          USE prec
+          USE main_mpi
+          USE poscar
+          USE lattice
+          IMPLICIT NONE
+
+          REAL(q),ALLOCATABLE,SAVE :: posion_all(:,:,:)
+        CONTAINS
+          SUBROUTINE chain_force(nions,posion,toten,force,a,b,iu6)
+            INTEGER node,i,ni
+            REAL(q),ALLOCATABLE,SAVE :: force_all(:,:,:)
+
+            IF (images==0) RETURN
+            IF (spring==-1000) RETURN
+          END SUBROUTINE chain_force
+        END MODULE chain
+EOF
+          printf 'chain.o \\\n' > fake/src/.objects
+          touch fake/src/main.F
+      - name: install → verify → uninstall → install
+        run: |
+          bash install.sh --src "$PWD/fake"
+          grep -q ef_ts_step fake/src/chain.F
+          grep -q 'ef_core.o ef_ts.o' fake/src/.objects
+          test -f fake/src/ef_ts.F && test -f fake/src/ef_core.F
+          bash install.sh --src "$PWD/fake" --uninstall
+          ! grep -q ef_ts_step fake/src/chain.F
+          ! grep -q 'ef_core.o' fake/src/.objects
+          bash install.sh --src "$PWD/fake"
+          echo "install.sh cycle OK"
