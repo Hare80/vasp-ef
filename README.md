@@ -80,7 +80,6 @@ See `docs/MANUAL.md` for the full user manual and workflow guidance.
 | `examples/h3-exchange/` | H + H₂ → H + H₂ | 3 atoms, 7-step convergence |
 | `examples/nh3-inversion/` | NH₃ umbrella | 4 atoms, barrier 0.21 eV |
 | `examples/sn2-cl-exchange/` | SN2 Cl exchange | 6 atoms, shallow double-well |
-| `examples/h-si001/` | H/Si(001) diffusion | 17 atoms, surface |
 | `examples/bench-set/` | batch builder | all five setups |
 
 ## Scripts
