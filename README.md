@@ -81,6 +81,7 @@ See `docs/MANUAL.md` for the full user manual and workflow guidance.
 | `examples/nh3-inversion/` | NH₃ umbrella | 4 atoms, barrier 0.21 eV |
 | `examples/sn2-cl-exchange/` | SN2 Cl exchange | 6 atoms, shallow double-well |
 | `examples/bench-set/` | batch builder | all five setups |
+| `examples/h-si001/` | H/Si(001) demo | structural demo only, not validated |
 
 ## Scripts
 
