@@ -101,7 +101,7 @@ python tests/test_scripts.py
 
 ## Citation
 
-Y. Lian, VASP-EF: eigenvector-following transition-state optimizer for
+Y.H. Lian, VASP-EF: eigenvector-following transition-state optimizer for
 VASP (2026). https://github.com/Hare80/vasp-ef
 
 ## License
